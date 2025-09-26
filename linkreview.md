@@ -4,7 +4,6 @@
 
 | Название | Год | Авторы | Ссылка | Краткое содержание |
 |---|---:|---|---|---|
-| **Neural Style Transfer (NST)** |||||
 | A Neural Algorithm of Artistic Style | 2015 | Leon A. Gatys, Alexander S. Ecker, Matthias Bethge | https://arxiv.org/abs/1508.06576 | Первая работа по NST с оптимизацией по матрицам Грама. |
 | Perceptual Losses for Real-Time Style Transfer and Super-Resolution | 2016 | Justin Johnson, Alexandre Alahi, Li Fei-Fei | https://arxiv.org/abs/1603.08155 | Генеративная сеть для переноса стиля в реальном времени. |
 | Instance Normalization: The Missing Ingredient for Fast Stylization | 2016 | Dmitry Ulyanov, Andrea Vedaldi, Victor Lempitsky | https://arxiv.org/abs/1607.08022 | InstanceNorm как ключевой элемент для стабильной стилизации. |
