@@ -23,7 +23,7 @@
 Abstract
 ========
 
-This work explores arbitrary image style transfer with convolutional neural networks. Building on Gatys, Johnson, and Ghiasi, we test generator modifications with a style encoder and several embedding integration methods, including concatenation, 1×1 injection, FiLM blocks, and patch-based transfer. Experiments on MS COCO and WikiArt show that while models reproduce colors and textures, they fail to capture distinctive stylistic features due to weak style embeddings. The study outlines architectural limitations and suggests improvements through enhanced encoder training and alternative loss functions.
+This work addresses the problem of arbitrary image style transfer using convolutional neural networks. Building on the methods of Gatys, Johnson, and Ghiasi, we develop and test generator modifications with a style encoder and various integration strategies for style embeddings: concatenation, 1×1 convolutional injection, FiLM blocks, and patch-based transfer. The encoder, based on Inception-v3 and trained on WikiArt, was combined with content images from MS COCO. Experiments show that models reproduce color palettes and basic textures but fail to capture distinctive stylistic features, often converging to averaged strokes and tones. The main limitation is the weak training dynamics of the style encoder, leading to uninformative embeddings. The study identifies architectural bottlenecks and suggests improvements, including stronger encoder training, decomposition of style components, and alternative loss formulations.
 
 Research publications
 ===============================
