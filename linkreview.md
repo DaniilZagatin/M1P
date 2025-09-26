@@ -20,14 +20,12 @@
 | StyTR²: Image Style Transfer with Transformers | 2022 | Weihao Xia, Yujiu Yang, Jing-Hao Xue | https://arxiv.org/abs/2204.12476 | Использование трансформеров для NST. |
 | Style Transformer for Image Generation | 2020 | Yongcheng Jing, et al. | https://arxiv.org/abs/2003.00179 | Transformer-подход к переносу стиля. |
 | Neural Style Transfer: A Review | 2019 | Yongcheng Jing, Yang Liu, et al. | https://arxiv.org/abs/1705.04058 | Обзор NST-методов и тенденций. |
-| **FiLM-блоки** |||||
 | FiLM: Visual Reasoning with a General Conditioning Layer | 2018 | Ethan Perez, Florian Strub, Harm de Vries, Vincent Dumoulin, Aaron Courville | https://arxiv.org/abs/1709.07871 | Введение FiLM — линейная модуляция признаков. |
 | FiLM in Visual Question Answering | 2018 | Perez et al. | https://arxiv.org/abs/1709.07871 | Демонстрация эффективности FiLM в VQA. |
 | Feature-wise Linear Modulation for Few-Shot Learning | 2019 | Tsung-Yu Lin, Subhransu Maji | https://arxiv.org/abs/1906.01905 | FiLM для few-shot задач. |
 | FiLM-Based Speech Processing | 2020 | Kim et al. | https://arxiv.org/abs/2008.11141 | Применение FiLM к аудио и распознаванию речи. |
 | Conditioning Neural Networks with FiLM for Multimodal Tasks | 2020 | Dumoulin, Perez | (Google Scholar) | Универсальность FiLM для разных модальностей. |
 | FiLM-VQA Extensions | 2019 | Various | https://arxiv.org/abs/1807.01726 | Расширения FiLM для визуально-семантических задач. |
-| **Inception-архитектуры** |||||
 | Going Deeper with Convolutions (Inception v1) | 2014 | Christian Szegedy, Wei Liu, Yangqing Jia, et al. | https://arxiv.org/abs/1409.4842 | Первая Inception-архитектура. |
 | Rethinking the Inception Architecture for Computer Vision (Inception v3) | 2015 | Christian Szegedy, Vincent Vanhoucke, Sergey Ioffe, Jonathon Shlens, Zbigniew Wojna | https://arxiv.org/abs/1512.00567 | Улучшения архитектуры, использование factorized convolutions. |
 | Inception-v4, Inception-ResNet and the Impact of Residual Connections | 2016 | Christian Szegedy, Sergey Ioffe, Vincent Vanhoucke, Alex Alemi | https://arxiv.org/abs/1602.07261 | Расширенные версии Inception с residual-связями. |
