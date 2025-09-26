@@ -1,4 +1,4 @@
-
+# Обзор литературы: Neural Style Transfer, FiLM и Inception
 
 | Название | Год | Авторы | Ссылка | Краткое содержание |
 | -------- |---- | ----- | ------ | ---- |
@@ -31,4 +31,8 @@
 | EfficientNet: Rethinking Model Scaling | 2019 | Mingxing Tan, Quoc V. Le | [link](https://arxiv.org/abs/1905.11946) | В работе рассматриваются идеи масштабирования моделей, основанные на принципах, использованных в Inception. EfficientNet предложил сбалансированный способ увеличения глубины, ширины и разрешения сети, что позволило достичь лучших результатов при меньших затратах. |
 | Inception-v4 in Large-Scale Image Recognition | 2016 | Szegedy et al. | [link](https://arxiv.org/abs/1602.07261) | В статье подробно описаны архитектурные детали Inception-v4 и её эффективность в задачах крупномасштабного распознавания изображений. Работа демонстрирует преимущества комбинации inception-блоков и residual-связей. |
 | Residual Connections Improve Inception Networks | 2016 | Szegedy et al. | [link](https://arxiv.org/abs/1602.07261) | Авторы показали, что добавление residual-связей в Inception-модели значительно улучшает точность классификации и стабилизирует процесс обучения. |
+
+---
+
+*Итого: ~35 статей по NST, FiLM и Inception.*
 
