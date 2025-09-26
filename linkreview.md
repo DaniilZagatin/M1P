@@ -31,7 +31,6 @@
 | Inception-v4, Inception-ResNet and the Impact of Residual Connections | 2016 | Christian Szegedy, Sergey Ioffe, Vincent Vanhoucke, Alex Alemi | https://arxiv.org/abs/1602.07261 | Расширенные версии Inception с residual-связями. |
 | Batch Normalization: Accelerating Deep Network Training | 2015 | Sergey Ioffe, Christian Szegedy | https://arxiv.org/abs/1502.03167 | Ключевой элемент, используемый в Inception. |
 | EfficientNet: Rethinking Model Scaling | 2019 | Mingxing Tan, Quoc V. Le | https://arxiv.org/abs/1905.11946 | Производные идеи, основанные на Inception и scaling. |
-| Inception-v3 Applications in Transfer Learning | 2016–2020 | Разные авторы | (Google Scholar) | Популярное применение Inception-v3 для feature extraction. |
 | Inception-v4 in Large-Scale Image Recognition | 2016 | Szegedy et al. | https://arxiv.org/abs/1602.07261 | Архитектурные детали и сравнение. |
 | Residual Connections Improve Inception Networks | 2016 | Szegedy et al. | https://arxiv.org/abs/1602.07261 | Влияние residual-связей. |
 
