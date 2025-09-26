@@ -15,16 +15,15 @@
 
 .. class:: center
 
-    :Название исследуемой задачи: Мое название работы
+    :Название исследуемой задачи: Метод мультистилевого рендеринга изображений
     :Тип научной работы: M1P/НИР/CoIS
-    :Автор: Имя Отчество Фамилия
-    :Научный руководитель: степень, Фамилия Имя Отчество
-    :Научный консультант(при наличии): степень, Фамилия Имя Отчество
+    :Автор: Даниил Ильич Загатин
+    :Научный руководитель: кандидат физико-математических наук, Китов Виктор Владимирович
 
 Abstract
 ========
 
-Purus sit amet luctus venenatis lectus magna fringilla. Condimentum id venenatis a condimentum vitae sapien. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Eget egestas purus viverra accumsan in. Nam aliquam sem et tortor. Donec et odio pellentesque diam volutpat commodo. Odio pellentesque diam volutpat commodo sed egestas. Sit amet dictum sit amet justo. Pellentesque sit amet porttitor eget. Imperdiet sed euismod nisi porta lorem mollis aliquam ut. Quis varius quam quisque id diam vel quam elementum. Ornare lectus sit amet est placerat in. Vulputate dignissim suspendisse in est ante. Elit sed vulputate mi sit amet mauris. Egestas sed tempus urna et pharetra pharetra. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus.
+This work explores arbitrary image style transfer with convolutional neural networks. Building on Gatys, Johnson, and Ghiasi, we test generator modifications with a style encoder and several embedding integration methods, including concatenation, 1×1 injection, FiLM blocks, and patch-based transfer. Experiments on MS COCO and WikiArt show that while models reproduce colors and textures, they fail to capture distinctive stylistic features due to weak style embeddings. The study outlines architectural limitations and suggests improvements through enhanced encoder training and alternative loss functions.
 
 Research publications
 ===============================
