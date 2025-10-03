@@ -14,142 +14,87 @@
 \usepackage{natbib}
 \usepackage{doi}
 
+\title{Метод мультистилевого рендеринга изображений}
 
-
-\title{A template for the \emph{arxiv} style}
-
-\author{ David S.~Hippocampus\thanks{Use footnote for providing further
-		information about author (webpage, alternative
-		address)---\emph{not} for acknowledging funding agencies.} \\
-	Department of Computer Science\\
-	Cranberry-Lemon University\\
-	Pittsburgh, PA 15213 \\
-	\texttt{hippo@cs.cranberry-lemon.edu} \\
-	%% examples of more authors
-	\And
-	Elias D.~Striatum \\
-	Department of Electrical Engineering\\
-	Mount-Sheikh University\\
-	Santa Narimana, Levand \\
-	\texttt{stariate@ee.mount-sheikh.edu} \\
-	%% \AND
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
-	%% \And
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
-	%% \And
-	%% Coauthor \\
-	%% Affiliation \\
-	%% Address \\
-	%% \texttt{email} \\
+\author{
+  Загатин Данилл Ильич \\
+  МГУ им. М.В. Ломоносова \\
+  Факультет ВМК, кафедра Математических методов прогнозирования \\
+  Москва, Россия \\
+  \texttt{daniil.zagatin@cs.msu.ru} \\
+  \And
+  Научный руководитель: к.ф.-м.н., доцент Китов Виктор Владимирович \\
+  МГУ им. М.В. Ломоносова
 }
 \date{}
 
-\renewcommand{\shorttitle}{\textit{arXiv} Template}
+\renewcommand{\shorttitle}{Multi-style Rendering Method}
 
-%%% Add PDF metadata to help others organize their library
-%%% Once the PDF is generated, you can check the metadata with
-%%% $ pdfinfo template.pdf
+
 \hypersetup{
-pdftitle={A template for the arxiv style},
-pdfsubject={q-bio.NC, q-bio.QM},
-pdfauthor={David S.~Hippocampus, Elias D.~Striatum},
-pdfkeywords={First keyword, Second keyword, More},
+  pdftitle={Метод мультистилевого рендеринга изображений},
+  pdfsubject={cs.CV},
+  pdfauthor={Загатин Данилл Ильич, Китов Виктор Владимирович},
+  pdfkeywords={перенос стиля, произвольная стилизация, стилевой эмбеддинг, AdaIN, FiLM, patch-based},
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-	\lipsum[1]
+В работе рассматривается задача произвольной стилизации изображений с использованием сверточных нейронных сетей (CNN). Большинство моделей обучаются для конкретного стиля и успешно передают палитры и текстуры, однако часто не воспроизводят уникальные стилистические особенности, склоняясь к усреднённым мазкам и цветам. На основе методов Гатиса, Джонсона и Гиаси исследуются модификации генератора с кодировщиком стиля и различными способами внедрения эмбеддингов: конкатенацией, 1×1-инъекцией, FiLM-блоками и патчевыми методами. Работа выявляет архитектурные ограничения и предлагает улучшения: усиление тренировки кодировщика, раздельное внедрение компонентов стиля и использование альтернативных функций потерь. Разработана мультистилевая лёгкая архитектура с высоким качеством стилизации и гибкостью применения к разнообразным стилям.
 \end{abstract}
 
-
-\keywords{First keyword \and Second keyword \and More}
+\keywords{перенос стиля \and свёрточные нейронные сети \and мультистилевая стилизация \and стилевой эмбеддинг \and FiLM}
 
 \section{Introduction}
-\lipsum[2]
-\lipsum[3]
+\textbf{Введение.}
+Перенос художественного стиля (Neural Style Transfer, NST) позволяет преобразовывать изображение, сохраняя его семантическое содержимое и воспроизводя художественные особенности другого изображения. Практическая ценность NST растёт в цифровом искусстве, дизайне, AR/VR и мобильных приложениях, где важны интерактивность, персонализация и низкая стоимость генерации контента.
+
+Классические оптимизационные подходы обеспечивают высокое качество, но требуют длительной итеративной подгонки под каждую новую пару изображений. Быстрые генеративные сети позволяют работать в реальном времени, однако в базовом варианте обучаются под один конкретный стиль, что ограничивает масштабирование. Универсальные методы произвольной стилизации снимают это ограничение, но часто теряют характерные структурные элементы стиля или страдают от артефактов и нестабильного обучения.
+
+В данной работе рассматривается мультистилевая схема рендеринга, где стилевое изображение кодируется в компактный эмбеддинг и внедряется в генератор различными механизмами: прямой конкатенацией к признаковым картам, 1{\texttimes}1-инъекцией (learnable projection), FiLM-модуляцией, а также через патчевое сопоставление признаков. Такой дизайн объединяет скорость feed-forward архитектур с гибкостью произвольной стилизации.
+
+Наш вклад — структурированное сравнение способов внедрения стилевого эмбеддинга, практические рекомендации по устойчивому обучению кодировщика стиля и анализ причин деградации качества (усреднение палитры и мазков, артефакты от локальных сопоставлений). Мы также обсуждаем улучшения: усиление тренировки кодировщика контрастными целями, раздельное внедрение палитры и текстур и альтернативные функции потерь для сохранения локальных деталей.
+
+\medskip
+\noindent\textbf{Обзор литературы.}
+Базовый подход \citet{gatys2015} формулирует NST как оптимизацию изображения под перцептивные потери на активациях VGG: контент фиксируется через промежуточные признаки, стиль — через матрицы Грама корреляций признаков. Это даёт качественную стилизацию, но непрактично для интерактивных сценариев.
+
+Переход к генераторам реального времени осуществлён в \citet{johnson2016}: сеть-преобразователь с residual-блоками обучается по перцептивным лоссам и стилизует за один прямой проход. Существенную роль в стабильности генерации сыграла Instance Normalization \citep{ulyanov2016instnorm}. Однако такие модели обычно требуют отдельного обучения под каждый стиль.
+
+Поддержка произвольных стилей достигается статистическими методами выравнивания признаков: AdaIN выравнивает среднее и дисперсию каналов \citep{huang2017adain}, WCT применяет whitening\&coloring трансформы \citep{li2017wct}. Работа \citet{ghiasi2017magentanet} использует стиль-кодировщик для предсказания параметров нормализации слоёв генератора, внедряя стиль непосредственно в механизм нормализации. Эти подходы быстры и гибки, но при сильной вариативности стилей могут терять локальные текстуры и характерные мазки.
+
+Локально-структурные (патчевые) методы сопоставляют фрагменты признаков контента и стиля \citep{chen2016fastpatch} или комбинируют CNN с MRF \citep{li2016cnnmrf}, что помогает передавать текстуры и повторяющиеся мотивы, но повышает требования к памяти и склонно к артефактам. Современные модели внимания усиливают согласование стиля и контента (SANet \citep{li2019sanet}, AdaAttN \citep{he2019adaattn}), а трансформерные решения (StyTR$^2$ \citep{xia2022stytr}) улучшают глобальные зависимости ценой усложнения архитектуры и обучения.
+
+Наконец, условные модули (например, FiLM \citep{perez2018film}) линейно модулируют признаки генератора параметрами, зависящими от условия (стиля), и предоставляют простой общий механизм внедрения стилевой информации; их практическая эффективность чувствительна к качеству стилевого эмбеддинга и балансу лоссов.
 
 \section{Headings: first level}
 \label{sec:headings}
 
-\lipsum[4] See Section \ref{sec:headings}.
 
 \subsection{Headings: second level}
-\lipsum[5]
-\begin{equation}
-	\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
-\end{equation}
+
 
 \subsubsection{Headings: third level}
-\lipsum[6]
+
 
 \paragraph{Paragraph}
-\lipsum[7]
-
 
 
 \section{Examples of citations, figures, tables, references}
 \label{sec:others}
 
 \subsection{Citations}
-Citations use \verb+natbib+. The documentation may be found at
-\begin{center}
-	\url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
 
-Here is an example usage of the two main commands (\verb+citet+ and \verb+citep+): Some people thought a thing \citep{kour2014real, hadash2018estimate} but other people thought something else \citep{kour2014fast}. Many people have speculated that if we knew exactly why \citet{kour2014fast} thought this\dots
 
 \subsection{Figures}
-\lipsum[10]
-See Figure \ref{fig:fig1}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
-\lipsum[11]
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{../figures/log_reg_cs_exp.eps}
-	\caption{Sample figure caption.}
-	\label{fig:fig1}
-\end{figure}
 
 \subsection{Tables}
-See awesome Table~\ref{tab:table}.
 
-The documentation for \verb+booktabs+ (`Publication quality tables in LaTeX') is available from:
-\begin{center}
-	\url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-
-
-\begin{table}
-	\caption{Sample table title}
-	\centering
-	\begin{tabular}{lll}
-		\toprule
-		\multicolumn{2}{c}{Part}                   \\
-		\cmidrule(r){1-2}
-		Name     & Description     & Size ($\mu$m) \\
-		\midrule
-		Dendrite & Input terminal  & $\sim$100     \\
-		Axon     & Output terminal & $\sim$10      \\
-		Soma     & Cell body       & up to $10^6$  \\
-		\bottomrule
-	\end{tabular}
-	\label{tab:table}
-\end{table}
 
 \subsection{Lists}
-\begin{itemize}
-	\item Lorem ipsum dolor sit amet
-	\item consectetur adipiscing elit.
-	\item Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac rutrum magna.
-\end{itemize}
 
 
 \bibliographystyle{unsrtnat}
