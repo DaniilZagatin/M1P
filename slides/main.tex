@@ -1,192 +1,294 @@
-\documentclass[10pt,pdf,hyperref={unicode}]{beamer}
+\documentclass[aspectratio=169]{beamer}
 
-\mode<presentation>
-{
-\usetheme{boxes}
-\beamertemplatenavigationsymbolsempty
+% --- Language / encoding ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english, russian]{babel}
 
-\setbeamertemplate{footline}[page number]
-\setbeamersize{text margin left=0.5em, text margin right=0.5em}
+% --- Math / figures ---
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% --- Theme ---
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+% --- Title info ---
+\title[Multi-style Rendering]{Метод мультистилевого рендеринга изображений}
+
+\author[Д.\,И.~Загатин]{%
+  Загатин Данилл Ильич\\[-1mm]
+  \small Научный руководитель: к.ф.-м.н., доцент Китов Виктор Владимирович%
 }
 
-\usepackage[utf8]{inputenc}
-\usepackage[english, russian]{babel}
-\usepackage{bm}
-\usepackage{multirow}
-\usepackage{ragged2e}
-\usepackage{indentfirst}
-\usepackage{multicol}
-\usepackage{subfig}
-\usepackage{amsmath,amssymb}
-\usepackage{enumerate}
-\usepackage{mathtools}
-\usepackage{comment}
-\usepackage{multicol}
+\institute[ВМК МГУ]{%
+  МГУ им. М.\,В.~Ломоносова\\
+  Факультет ВМК, кафедра Математических методов прогнозирования%
+}
 
-\usepackage[all]{xy}
+\date{}
 
-\usepackage{tikz}
-\usetikzlibrary{positioning,arrows}
 
-\tikzstyle{name} = [parameters]
-\definecolor{name}{rgb}{0.5,0.5,0.5}
-
-\usepackage{caption}
-\captionsetup{skip=0pt,belowskip=0pt}
-
-\newtheorem{rustheorem}{Теорема}
-\newtheorem{russtatement}{Утверждение}
-\newtheorem{rusdefinition}{Определение}
-
-% colors
-\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
-\definecolor{darkcyan}{rgb}{0.0, 0.55, 0.55}
-
-\AtBeginEnvironment{figure}{\setcounter{subfigure}{0}}
-
-\captionsetup[subfloat]{labelformat=empty}
-
-%----------------------------------------------------------------------------------------------------------
-
-\title[Пример слайдов по работе]{Пример слайдов по работе \\ курса}
-\author{И.\,О.\,Фамилия}
-
-\institute[]{Московский физико-технический институт}
-\date[2022]{\small 10\;февраля\;2022\,г.}
-
-%---------------------------------------------------------------------------------------------------------
 \begin{document}
 
+% ---------------- Slide 1 ----------------
 \begin{frame}
-\titlepage
+  \titlepage
 \end{frame}
 
-%----------------------------------------------------------------------------------------------------------
-\section{Слайд об исследованиях}
-\begin{frame}{Слайд об исследованиях}
-\bigskip
-Исследуется проблема \ldots.
-\begin{block}{Цель исследования~---}
-предложить метод \ldots.
+% ---------------- Slide 2 ----------------
+\begin{frame}{Мотивация и проблема}
+\begin{itemize}
+  \item Neural Style Transfer (NST): перенос художественного стиля на контент.
+  \item Оптимизационные методы (Gatys) дают высокое качество, но медленные.
+  \item Feed-forward генераторы (Johnson) быстрые, но обычно обучаются на \textbf{один стиль}.
+  \item Произвольная стилизация часто \textbf{усредняет мазки/палитру} и теряет уникальные элементы.
+\end{itemize}
+\end{frame}
+
+% ---------------- Slide 3 ----------------
+\begin{frame}{Цель и вклад}
+\begin{block}{Цель}
+Построить лёгкую мультистилевую архитектуру, поддерживающую множество стилей без переобучения.
 \end{block}
-\begin{block}{Требуется предложить}
-\justifying
-\begin{enumerate}[1)]
-\item метод \ldots,
-\item метод \ldots,
-\item метод \ldots.
-\end{enumerate}
-\end{block}
-\begin{block}{Решение}
-Для \ldots.
+
+\begin{block}{Вклад}
+\begin{itemize}
+  \item Сравнение способов внедрения стилевого эмбеддинга в генератор.
+  \item Практические рекомендации по обучению кодировщика стиля.
+  \item Анализ деградаций: усреднение, артефакты локальных сопоставлений.
+\end{itemize}
 \end{block}
 \end{frame}
 
-%---------------------------------------------------------------------------------------------------------
-\section{Постановка задачи \ldots}
-\begin{frame}{Постановка задачи \ldots}
-Заданы
-\begin{enumerate}[1)]
-    \item признаки \ldots,
-    \item целевая переменная \ldots,
-    \item \ldots.
-\end{enumerate}
-
-\ldots
-
-\bigskip
-
-Требуется выбрать модель \ldots из множества
+% ---------------- Slide 4 ----------------
+\begin{frame}{Постановка задачи}
+Пусть
 \[
-	\mathfrak{G} = \left\{\mathbf{g}| \mathbf{g}:\mathbb{R}^{n} \to \mathbb{Y}^\prime\right\}.
+X_c \subset \mathbb{R}^{H\times W\times 3} \quad \text{(контент)}, \qquad
+X_s \subset \mathbb{R}^{H\times W\times 3} \quad \text{(стиль)}.
 \]
-Оптимизационная задача \ldots:
+Нужно построить отображение:
 \[
-	\mathbf{g} = \arg\min_{\mathbf{g} \in \mathfrak{G}} \mathcal{L}\bigr(\ldots\bigr),
+y = f_\theta(x_c, x_s),
 \]
-где $\mathcal{L}$~--- функция ошибки.
-
-\bigskip
-\footnotetext[1]{\textit{Lopez-Paz D., Bottou L., Scholkopf B., Vapnik V.} Unifying distillation and privileged information // ICLR, 2016.}
-\footnotetext[2]{\textit{Hinton G., Vinyals O., Dean J.} Distilling the knowledge in a neural network // NIPS, 2015.}
-\end{frame}
-
-%----------------------------------------------------------------------------------------------------------
-\section{Предложенный метод \ldots}
-\begin{frame}{Предложенный метод \ldots}
-~\\[-1mm]
-Заданы
-\begin{enumerate}[1)]
-	\item \ldots,
-	\item \ldots.
-\end{enumerate}
+где $y$ сохраняет семантику $x_c$ и визуальные свойства $x_s$.
 
 \medskip
-Параметрические семейства:
+В скрытом пространстве признаков стилевое изображение кодируется эмбеддингом:
 \[
-\setlength\abovedisplayskip{0pt}
-\mathfrak{F} = \left\{\mathbf{f}| \mathbf{f} = \text{softmax}\bigr(\mathbf{v}\bigr(\mathbf{x}\bigr)/T\bigr), \quad \mathbf{v}: \mathbb{R}^{n} \to \mathbb{R}^K \right\},
+z_s = e_\psi(x_s) \in \mathbb{R}^d.
 \]
-\[
-\mathfrak{G} = \left\{\mathbf{g}| \mathbf{g} = \text{softmax}\bigr(\mathbf{z}\bigr(\mathbf{x}\bigr)/T\bigr), \quad \mathbf{z}: \mathbb{R}^n \to \mathbb{R}^K \right\},
-\]
-где~\ldots.
-
-\medskip
-Функция ошибки
-\[
-\setlength\abovedisplayskip{0pt}
-\begin{aligned}
-   \mathcal{L}\bigr(\mathbf{g}\bigr) = &-\sum_{i=1}^{m}\underbrace{{\sum_{k=1}^{K}y^k_i\log\mathbf{g}\bigr(\mathbf{x}_i\bigr)\bigr|_{T=1}}}_{\text{исходная функция потерь}}- \sum_{i=1}^{m}\underbrace{{\sum_{k=1}^{K}\mathbf{f}\bigr(\mathbf{x}_i\bigr)\bigr|_{T=T_0}\log\mathbf{g}\bigr(\mathbf{x}_i\bigr)\bigr|_{T=T_0}}}_{\text{слагаемое дистилляции}},
-\end{aligned}
-\setlength\belowdisplayskip{0pt}
-\]
-где~\ldots.
-
-Оптимальная модель выбирается из класса,
-$\hat{\mathbf{g}} = \arg\min\limits_{\mathbf{g} \in \mathfrak{G}_{\text{cl}}} \mathcal{L}\bigr(\mathbf{g}\bigr).$
 \end{frame}
 
-%----------------------------------------------------------------------------------------------------------
-\section{Анализ предложенного метода \ldots}
-\begin{frame}{Анализ предложенного метода \ldots}
-\justifying
+% ---------------- Slide 5 ----------------
+\begin{frame}{Общая схема метода}
+Искомая модель:
+\[
+f_\theta(x_c, x_s) = G_\theta\bigl(x_c,\, e_\psi(x_s)\bigr).
+\]
 
-На графике показана зависимость значения параметров$w_i$ в зависимости от параметра~$l_1$-регуляризации~$C$.
-\begin{figure}[h!]
-\includegraphics[width=0.45\textwidth]{../figures/log_reg_cs_exp.eps}
-\includegraphics[width=0.45\textwidth]{../figures/log_reg_cs_exp.eps}
-\end{figure}
-
-С увеличением параметра регуляризации~$C$ число ненулевых параметров~$w_i$ уменьшается.
+\begin{itemize}
+  \item $e_\psi$ — \textbf{кодировщик стиля}: извлекает компактное представление $z_s$.
+  \item $G_\theta$ — \textbf{генератор}: преобразует контент с учётом $z_s$.
+  \item Ключевой вопрос: \textbf{как эффективно внедрять $z_s$ в генератор?}
+\end{itemize}
 
 \end{frame}
 
-%----------------------------------------------------------------------------------------------------------
-\section{Выводы}
-\begin{frame}{Выводы}
-\justifying
-	\begin{enumerate}
-	\justifying
-	    \item Предложен \ldots.
-        \item Доказаны теоремы \ldots, 
-        \begin{itemize}
-            \item[---] \ldots,
-            \item[---] \ldots.
-        \end{itemize}
-        \item Предложен метод \ldots
-        \begin{itemize}
-            \item[---] \ldots,
-            \item[---] \ldots.
-        \end{itemize}
-        \item Предложены методы \ldots
-        \begin{itemize}
-            \item[---] \ldots,
-            \item[---] \ldots.
-        \end{itemize}
-        \item Предложена вероятностная интерпретации \ldots.
-	\end{enumerate}
+% ---------------- Slide 6 ----------------
+\begin{frame}{Кодировщик стиля}
+\begin{itemize}
+  \item Основа: модифицированный \textit{Inception-v3}, усечение до \texttt{Mixed\_6e}.
+  \item После свёрток: Global Average Pooling $\rightarrow$ FC $\rightarrow \mathbb{R}^d$.
+  \item Нормализация и масштабирование:
+\[
+z_s = \alpha \cdot \frac{h}{\|h\|_2}, \qquad
+h = \mathrm{FC}(\mathrm{GAP}(\mathrm{Inception}(x_s))).
+\]
+  \item Для устойчивости: дообучение на классификации художественных стилей (WikiArt).
+\end{itemize}
 \end{frame}
-%----------------------------------------------------------------------------------------------------------
+\begin{frame}{Кодировщик стиля}
 
-\end{document} 
+% Вставь схему, если есть файл:
+\begin{center}
+\includegraphics[width=0.85\linewidth]{style_enc.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Векторные представления стилей}
+
+% Вставь схему, если есть файл:
+\begin{center}
+\includegraphics[width=0.55\linewidth]{emb.png}
+\end{center}
+
+\end{frame}
+
+
+% ---------------- Slide 7 ----------------
+\begin{frame}{Архитектура генератора (Johnson et al.)}
+\begin{itemize}
+  \item Симметричная схема: downsampling $\rightarrow$ residual bottleneck $\rightarrow$ upsampling.
+  \item Downsampling: свёртки $9\times 9$, $3\times 3$ (две со stride=2), InstanceNorm + ReLU.
+  \item Bottleneck: несколько residual-блоков.
+  \item Upsampling: Upsample+Conv $\times 2$, InstanceNorm + ReLU.
+  \item Выход: conv $9\times 9$ $\rightarrow$ RGB.
+\end{itemize}
+\end{frame}
+
+% ---------------- Slide 8 ----------------
+\begin{frame}{Внедрение стиля}
+\small
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.49\textwidth}
+    \begin{block}{1) Конкатенация}
+      $z_s$ расширяется по $H\times W$ и конкатенируется с картой признаков по каналам
+      (в residual-блоках перед свёртками).
+    \end{block}
+
+    \begin{block}{2) 1$\times$1-инъекция}
+      Стилевой вектор преобразуется в карту признаков и добавляется:
+      \[
+        F' = F + \mathrm{Conv}_{1\times 1}(z_s).
+      \]
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.49\textwidth}
+    \begin{block}{3) FiLM}
+      \[
+        F' = \gamma(z_s)\cdot F + \beta(z_s),
+      \]
+      где $\gamma(\cdot), \beta(\cdot)$ — линейные преобразователи эмбеддинга.
+    \end{block}
+
+    \begin{block}{4) Patch-based}
+      Локальное сопоставление патчей признаков (напр., по косинусному сходству):
+      \[
+        \Phi'(x_c)=\mathrm{PatchMatch}(\Phi(x_c),\Phi(x_s)).
+      \]
+    \end{block}
+  \end{column}
+\end{columns}
+\end{frame}
+
+
+% ---------------- Slide 10 ----------------
+\begin{frame}{Функция потерь}
+\small
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+
+Общая функция:
+\[
+\mathcal{L}_{total} =
+\lambda_c \mathcal{L}_{content} +
+\lambda_s \mathcal{L}_{style} +
+\lambda_{TV}\mathcal{L}_{TV}.
+\]
+
+\begin{itemize}
+  \item \textbf{Контент (VGG-19, слой conv4\_2 / relu4\_2):}
+  \[
+  \mathcal{L}_{content} = \|\Phi_{4,2}(y) - \Phi_{4,2}(x_c)\|_2^2.
+  \]
+
+  \item \textbf{Стиль (VGG-19, слои conv1\_1, conv2\_1, conv3\_1, conv4\_1, conv5\_1):}
+  \[
+  \mathcal{L}_{style} = \sum_{l\in\mathcal{S}} \left\|G(\Phi_{l}(y)) - G(\Phi_{l}(x_s))\right\|_2^2,
+  \qquad
+  \mathcal{S}=\{1\_1,2\_1,3\_1,4\_1,5\_1\}.
+  \]
+
+  \item \textbf{Total Variation (TV) — сглаживание и подавление ``шумных'' артефактов:}
+  \[
+  \mathcal{L}_{TV}(y)=
+  \sum_{i,j}\left(\left\|y_{i+1,j}-y_{i,j}\right\|_2^2+
+                 \left\|y_{i,j+1}-y_{i,j}\right\|_2^2\right).
+  \]
+\end{itemize}
+\end{frame}
+
+% ---------------- Slide 11 ----------------
+\begin{frame}{Эксперименты и данные (в процессе)}
+\begin{itemize}
+  \item Контент: MS COCO (примерно 10\,000 изображений).
+  \item Стиль: WikiArt (фрагменты; заявлено 50 направлений; 200 стилевых фрагментов).
+  \item Случайные кропы: $128\times 128$ и $256\times 256$.
+  \item Обучение: Adam, lr $5\cdot 10^{-4}$, batch 32, 80 эпох, GPU Tesla P100.
+  \item Две фазы: совместное обучение $(\theta,\psi)$; затем заморозка $G$ и дообучение $e_\psi$.
+\end{itemize}
+
+% Вставь примеры, если есть:
+\begin{center}
+\begin{minipage}{0.3\linewidth}
+\centering
+\includegraphics[width=\linewidth]{con2.jpg}
+{\small Контентное изображение}
+\end{minipage}
+\begin{minipage}{0.25\linewidth}
+\centering
+\includegraphics[width=\linewidth]{style_15_fragment_1.jpg}
+{\small Стилевое изображение}
+\end{minipage}
+\end{center}
+
+\end{frame}
+
+% ---------------- Slide 12 ----------------
+% ---------------- Slide: Results (ArtFID) ----------------
+\begin{frame}{Результаты: сравнение по ArtFID ($\downarrow$)}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+
+\begin{table}
+\centering
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Стиль} & \textbf{Concat} & \textbf{1$\times$1 inj.} & \textbf{Add} & \textbf{FiLM} & \textbf{Johnson} \\
+\midrule
+Импрессионизм     & 44.6 & 46.8 & 41.6 & 38.6 & 34.9 \\
+Кубизм            & 48.3 & 50.4 & 45.5 & 42.3 & 39.7 \\
+Постимпрессионизм & 42.8 & 45.1 & 39.9 & 36.8 & 33.5 \\
+Экспрессионизм    & 47.0 & 49.2 & 44.1 & 41.0 & 37.9 \\
+Сюрреализм        & 45.2 & 47.3 & 42.1 & 39.2 & 36.1 \\
+Абстракция        & 49.9 & 52.0 & 46.8 & 43.7 & 40.2 \\
+\midrule
+\textbf{Среднее}  & \textbf{46.3} & \textbf{48.5} & \textbf{43.3} & \textbf{40.3} & \textbf{37.0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{-2mm}
+\textbf{Вывод:} FiLM даёт ArtFID, близкий к Johnson (в среднем $\approx 3$ пункта),
+сохраняя универсальность одной модели для множества стилей.
+\end{frame}
+
+
+% ---------------- Slide: Qualitative examples (FiLM) ----------------
+\begin{frame}{Примеры работы модели (FiLM)}
+\centering
+\begin{minipage}{0.85\linewidth}
+\centering
+\includegraphics[width=0.58\linewidth]{res1.jpg}
+
+\includegraphics[width=0.58\linewidth]{res2.jpg}
+
+\includegraphics[width=0.58\linewidth]{res3.jpg}
+\end{minipage}
+\end{frame}
+
+
+\end{document}
